@@ -3,7 +3,7 @@ var logger = require('winston');
 
 var config = require('./config');
 
-var mongoUrl = process.env.MONGO_URI || config.mongodb_url;
+var mongoUrl = process.env.MONGODB_URI || config.mongodb_url;
 
 if (!mongoUrl) {
     var errorMsg = "No MongoDB connection URL set";
