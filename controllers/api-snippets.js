@@ -61,4 +61,63 @@ router.get('/:snippetId', function(req, res, next) {
     });
 });
 
+var puttableProps = ['name', 'description', 'author', 'language', 'code', 'tags'];
+router.put('/:snippetId', function(req, res, next) {
+    Snippet.findOne({
+        _id: req.params.snippetId
+    }).exec(function(err, snippet) {
+        if (err) {
+            return next(err);
+        }
+
+        if (!snippet) {
+            var error = new Error();
+            error.status = 400;
+            error.message = "No snippet with this ID exists";
+
+            return next(error);
+        }
+
+        puttableProps.forEach(function(prop) {
+            if (req.body[prop] !== undefined) {
+                snippet[prop] = req.body[prop];
+            }
+        });
+
+        snippet.save(function(err, updatedSnippet) {
+            if (err) {
+                return next(err);
+            }
+
+            res.status(200).json(updatedSnippet);
+        });
+    });
+});
+
+router.delete('/:snippetId', function(req, res, next) {
+    Snippet.findOne({
+        _id: req.params.snippetId
+    }).exec(function(err, snippet) {
+        if (err) {
+            return next(err);
+        }
+
+        if (!snippet) {
+            var error = new Error();
+            error.status = 400;
+            error.message = "No snippet with this ID exists";
+
+            return next(error);
+        }
+
+        snippet.remove(function(err) {
+            if (err) {
+                return next(err);
+            }
+
+            return res.status(200).send();
+        });
+    });
+});
+
 module.exports = router;
