@@ -1,0 +1,32 @@
+{
+  "name": "crpladev-snippets-api",
+  "version": "1.0.0",
+  "description": "Simple API server for managing code snippets",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MICSTI/crpladev-snippets-api.git"
+  },
+  "keywords": [
+    "node",
+    "API",
+    "snippets",
+    "code"
+  ],
+  "author": "Michael Stifter",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/MICSTI/crpladev-snippets-api/issues"
+  },
+  "homepage": "https://github.com/MICSTI/crpladev-snippets-api#readme",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2",
+    "mongoose": "^4.9.2",
+    "winston": "^2.3.1"
+  }
+}
