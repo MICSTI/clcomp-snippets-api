@@ -48,7 +48,7 @@ app.use(function(req, res, next) {
 });
 
 // API routes ================================================
-//app.use('/api/nearest/police', require('./controllers/api-police-stations'));
+app.use('/snippets', require('./controllers/api-snippets'));
 
 // index route
 app.get('/', function(req, res) {
