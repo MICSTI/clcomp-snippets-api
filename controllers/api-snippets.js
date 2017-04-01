@@ -7,11 +7,23 @@ var logger = require('winston');
 
 var Snippet = require('../models/snippet');
 
+var ALLOWED_PROPERTIES = ['name', 'description', 'author', 'language', 'code', 'tags'];
+
 /**
- * Returns all snippets from the database as an array.
+ * If no query parameters are set, it returns all snippets from the database as an array.
+ * Otherwise, it return only snippets which match the search criteria (based on AND check).
  */
 router.get('/', function(req, res, next) {
-    Snippet.find({})
+    var matchObj = {};
+
+    // check if query parameters have been set
+    ALLOWED_PROPERTIES.forEach(function(prop) {
+        if (req.query[prop] !== undefined) {
+            matchObj[prop] = req.query[prop];
+        }
+    });
+
+    Snippet.find(matchObj)
         .exec(function(err, snippets) {
             if (err) {
                 return next(err);
@@ -26,7 +38,7 @@ router.post('/', function(req, res, next) {
 
     snippet.save(function(err, snippetObj) {
         if (err) {
-            return next(err);
+            return next(getWrappedError(err, 400));
         }
 
         if (!snippetObj) {
@@ -61,7 +73,6 @@ router.get('/:snippetId', function(req, res, next) {
     });
 });
 
-var puttableProps = ['name', 'description', 'author', 'language', 'code', 'tags'];
 router.put('/:snippetId', function(req, res, next) {
     Snippet.findOne({
         _id: req.params.snippetId
@@ -78,7 +89,7 @@ router.put('/:snippetId', function(req, res, next) {
             return next(error);
         }
 
-        puttableProps.forEach(function(prop) {
+        ALLOWED_PROPERTIES.forEach(function(prop) {
             if (req.body[prop] !== undefined) {
                 snippet[prop] = req.body[prop];
             }
@@ -86,7 +97,7 @@ router.put('/:snippetId', function(req, res, next) {
 
         snippet.save(function(err, updatedSnippet) {
             if (err) {
-                return next(err);
+                return next(getWrappedError(err, 400));
             }
 
             res.status(200).json(updatedSnippet);
@@ -112,12 +123,23 @@ router.delete('/:snippetId', function(req, res, next) {
 
         snippet.remove(function(err) {
             if (err) {
-                return next(err);
+                return next(getWrappedError(err, 400));
             }
 
             return res.status(200).send();
         });
     });
 });
+
+var getWrappedError = function(err, status) {
+    var error = new Error();
+
+    status = status || 500;
+
+    error.status = status;
+    error.message = err.message;
+
+    return error;
+};
 
 module.exports = router;
