@@ -9,13 +9,16 @@ var Snippet = db.model('snippet', {
         type: String
     },
     author: {
-        type: String
+        type: String,
+        required: true
     },
     language: {
-        type: String
+        type: String,
+        required: true
     },
     code: {
-        type: String
+        type: String,
+        required: true
     },
     tags: [{
         type: String
