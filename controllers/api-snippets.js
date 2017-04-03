@@ -4,6 +4,8 @@
 var router = require('express').Router();
 var config = require('../config');
 var logger = require('winston');
+var mongoose = require('mongoose');
+var objectid = mongoose.Types.ObjectId;
 
 var Snippet = require('../models/snippet');
 
@@ -54,8 +56,18 @@ router.post('/', function(req, res, next) {
 });
 
 router.get('/:snippetId', function(req, res, next) {
+    var snippetId = req.params.snippetId;
+
+    if (!objectid.isValid(snippetId)) {
+        var error = new Error();
+        error.status = 400;
+        error.message = "No snippet with this ID exists";
+
+        return next(error);
+    }
+
     Snippet.findOne({
-        _id: req.params.snippetId
+        _id: snippetId
     }).exec(function(err, snippet) {
         if (err) {
             return next(getWrappedError(err, 400));
@@ -74,8 +86,18 @@ router.get('/:snippetId', function(req, res, next) {
 });
 
 router.put('/:snippetId', function(req, res, next) {
+    var snippetId = req.params.snippetId;
+
+    if (!objectid.isValid(snippetId)) {
+        var error = new Error();
+        error.status = 400;
+        error.message = "No snippet with this ID exists";
+
+        return next(error);
+    }
+
     Snippet.findOne({
-        _id: req.params.snippetId
+        _id: snippetId
     }).exec(function(err, snippet) {
         if (err) {
             return next(getWrappedError(err, 400));
@@ -106,8 +128,18 @@ router.put('/:snippetId', function(req, res, next) {
 });
 
 router.delete('/:snippetId', function(req, res, next) {
+    var snippetId = req.params.snippetId;
+
+    if (!objectid.isValid(snippetId)) {
+        var error = new Error();
+        error.status = 400;
+        error.message = "No snippet with this ID exists";
+
+        return next(error);
+    }
+
     Snippet.findOne({
-        _id: req.params.snippetId
+        _id: snippetId
     }).exec(function(err, snippet) {
         if (err) {
             return next(getWrappedError(err, 400));
