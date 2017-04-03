@@ -26,7 +26,7 @@ router.get('/', function(req, res, next) {
     Snippet.find(matchObj)
         .exec(function(err, snippets) {
             if (err) {
-                return next(err);
+                return next(getWrappedError(err, 400));
             }
 
             res.status(200).json(snippets);
@@ -58,7 +58,7 @@ router.get('/:snippetId', function(req, res, next) {
         _id: req.params.snippetId
     }).exec(function(err, snippet) {
         if (err) {
-            return next(err);
+            return next(getWrappedError(err, 400));
         }
 
         if (!snippet) {
@@ -78,7 +78,7 @@ router.put('/:snippetId', function(req, res, next) {
         _id: req.params.snippetId
     }).exec(function(err, snippet) {
         if (err) {
-            return next(err);
+            return next(getWrappedError(err, 400));
         }
 
         if (!snippet) {
@@ -110,7 +110,7 @@ router.delete('/:snippetId', function(req, res, next) {
         _id: req.params.snippetId
     }).exec(function(err, snippet) {
         if (err) {
-            return next(err);
+            return next(getWrappedError(err, 400));
         }
 
         if (!snippet) {
