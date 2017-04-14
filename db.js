@@ -3,6 +3,7 @@ var logger = require('winston');
 
 var config = require('./config');
 
+// MongoDB connection URL (if no MONGODB_URI is set, we fall back to the URL set in the config file)
 var mongoUrl = process.env.MONGODB_URI || config.mongodb_url;
 
 if (!mongoUrl) {

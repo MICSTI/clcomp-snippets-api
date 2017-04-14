@@ -9,9 +9,15 @@ var objectid = mongoose.Types.ObjectId;
 
 var Snippet = require('../models/snippet');
 
+// Allowed properties for a snippet
 var ALLOWED_PROPERTIES = ['name', 'description', 'author', 'language', 'code', 'tags'];
 
 /**
+ * GET /snippets
+ * GET /snippets?<attribute>=<value>...
+ * Returns an array containing all snippets that match the search criteria or all snippets if no search criteria were
+ * added via the query parameters.
+ *
  * If no query parameters are set, it returns all snippets from the database as an array.
  * Otherwise, it return only snippets which match the search criteria (based on AND check).
  */
@@ -19,6 +25,7 @@ router.get('/', function(req, res, next) {
     var matchObj = {};
 
     // check if query parameters have been set
+    // if no query parameters were set, all snippets are returned
     ALLOWED_PROPERTIES.forEach(function(prop) {
         if (req.query[prop] !== undefined) {
             matchObj[prop] = req.query[prop];
@@ -35,6 +42,13 @@ router.get('/', function(req, res, next) {
         });
 });
 
+/**
+ * POST /snippets
+ * Creates a new snippet.
+ *
+ * If the creation was successful, 201 Created will be returned along with the created object and its assigned ID.
+ * If the model criteria defined in ../models/snippet.js are not met, an error will be returned.
+ */
 router.post('/', function(req, res, next) {
     var snippet = new Snippet(req.body);
 
@@ -55,6 +69,10 @@ router.post('/', function(req, res, next) {
     });
 });
 
+/**
+ * GET /snippets/:snippetId
+ * Returns the snippet with the specified ID or an error if no such snippet exists.
+ */
 router.get('/:snippetId', function(req, res, next) {
     var snippetId = req.params.snippetId;
 
@@ -85,6 +103,13 @@ router.get('/:snippetId', function(req, res, next) {
     });
 });
 
+/**
+ * PUT /snippets/:snippedId
+ * Updates the snippet with the specified ID.
+ *
+ * Please note that it only updates the properties passed in the body.
+ * Properties which were not passed in the body will not be changed.
+ */
 router.put('/:snippetId', function(req, res, next) {
     var snippetId = req.params.snippetId;
 
@@ -127,6 +152,10 @@ router.put('/:snippetId', function(req, res, next) {
     });
 });
 
+/**
+ * DELETE /snippets/:snippetId
+ * Deletes the snippet with the specified ID or returns an error if no such snippet exists.
+ */
 router.delete('/:snippetId', function(req, res, next) {
     var snippetId = req.params.snippetId;
 
